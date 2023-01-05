@@ -2,9 +2,6 @@
 
 #include "../../include/bst.h"
 
-int is_reserved(struct bst_node * bst, int value) {
-	return bst_find_node(bst, value) != NULL;
-}
 void print_node(struct bst_node * head) {
 	if (head != NULL ) 
 		printf("%d ", 
