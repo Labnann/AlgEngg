@@ -1,17 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "./include/queue.h"
+#include "bst.h"
 
 
-struct bst_node {
-	struct bst_node * left;
-	struct bst_node * right;
-	int value;
-	void* data;
-};
 
-
-struct bst_node * create_node (int value, void * data) {
+struct bst_node * bst_create_node (int value, void * data) {
 	struct bst_node*  head = malloc(sizeof(struct bst_node));
 	head->value = value;
 	head->left = NULL;
@@ -20,8 +13,6 @@ struct bst_node * create_node (int value, void * data) {
 
 	return head;
 }
-
-
 void put_at_right(struct bst_node * head, struct bst_node* next){
 	head->right = next;
 }
@@ -58,15 +49,15 @@ void bst_insert_node (struct bst_node* head, struct bst_node* next){
 
 }
 
-struct bst_node* bst_create(int* array, int size)
+struct bst_node* bst_create_from_array(int* array, int size)
 {
 	int i = 0;
 	if (size == 0) return NULL;	
-	struct bst_node *head = create_node(array[0], NULL);
+	struct bst_node *head = bst_create_node(array[0], NULL);
 
 
 	for (i = 1; i < size; i++){
-		struct bst_node *next = create_node(array[i], NULL);
+		struct bst_node *next = bst_create_node(array[i], NULL);
 		bst_insert_node(head, next);
 
 	}
@@ -85,7 +76,7 @@ struct bst_node* bst_find_node (struct bst_node* head, int value){
 		return bst_find_node (head->right, value);
 
 	return bst_find_node(head->left, value);
-	
+
 
 }
 
@@ -145,7 +136,7 @@ void print_node(struct bst_node* head){
 
 int main () {
 	int array[20] = {50, 75, 25, 29, 45, 60, 10, 80};
-	struct bst_node *bst = bst_create(array, 8);
+	struct bst_node *bst = bst_create_from_array(array, 8);
 	bst_dfs_traverse(bst, NULL, &print_node, NULL);
 
 	printf("\n");
