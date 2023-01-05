@@ -73,20 +73,36 @@ struct node* create_bst(int* array, int size)
 
 
 
-void in_order_traverse(struct node * head){
+void dfs_traverse(
+		struct node * head,
+	        void (*do_pre_order) (struct node *head),
+	        void (*do_in_order) (struct node *head),
+	        void (*do_post_order) (struct node *head)
+
+		){
 	if (head == NULL) return;
-	in_order_traverse(head->left);
-	printf("%d ", head->value);
-	in_order_traverse(head->right);
+
+	if (do_pre_order != NULL) do_pre_order(head);
+
+	dfs_traverse(head->left, do_pre_order, do_in_order, do_post_order);
+
+	if (do_in_order != NULL) do_in_order(head);
+
+	dfs_traverse(head->right, do_pre_order, do_in_order, do_post_order);
+
+	if (do_post_order != NULL) do_post_order(head);
+
 }
 
 
-
+void print_node(struct node* head){
+	printf("%d ", head->value);
+}
 
 int main () {
  int array[20] = {50, 75, 25, 29, 45, 60, 10, 80};
  struct node *bst = create_bst(array, 8);
- in_order_traverse(bst);
+ dfs_traverse(bst, NULL, &print_node, NULL);
 }
 
 
