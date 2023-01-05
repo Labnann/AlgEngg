@@ -3,16 +3,16 @@
 #include "./include/queue.h"
 
 
-struct node {
-	struct node * left;
-	struct node * right;
+struct bst_node {
+	struct bst_node * left;
+	struct bst_node * right;
 	int value;
 	void* data;
 };
 
 
-struct node * create_node (int value, void * data) {
-	struct node*  head = malloc(sizeof(struct node));
+struct bst_node * create_node (int value, void * data) {
+	struct bst_node*  head = malloc(sizeof(struct bst_node));
 	head->value = value;
 	head->left = NULL;
 	head->right = NULL;
@@ -22,25 +22,25 @@ struct node * create_node (int value, void * data) {
 }
 
 
-void put_at_right(struct node * head, struct node* next){
+void put_at_right(struct bst_node * head, struct bst_node* next){
 	head->right = next;
 }
 
-void put_at_left (struct node *head, struct node *next) {
+void put_at_left (struct bst_node *head, struct bst_node *next) {
 	head->left = next;
 }
 
 
-int has_left_subtree (struct node * head){
+int has_left_subtree (struct bst_node * head){
 	return head->left != NULL;
 }
 
-int has_right_subtree (struct node * head){
+int has_right_subtree (struct bst_node * head){
 	return head->right != NULL;
 }
 
 
-void bst_insert_node (struct node* head, struct node* next){
+void bst_insert_node (struct bst_node* head, struct bst_node* next){
 
 
 	if (next->value > head->value){
@@ -58,15 +58,15 @@ void bst_insert_node (struct node* head, struct node* next){
 
 }
 
-struct node* bst_create(int* array, int size)
+struct bst_node* bst_create(int* array, int size)
 {
 	int i = 0;
 	if (size == 0) return NULL;	
-	struct node *head = create_node(array[0], NULL);
+	struct bst_node *head = create_node(array[0], NULL);
 
 
 	for (i = 1; i < size; i++){
-		struct node *next = create_node(array[i], NULL);
+		struct bst_node *next = create_node(array[i], NULL);
 		bst_insert_node(head, next);
 
 	}
@@ -77,7 +77,7 @@ struct node* bst_create(int* array, int size)
 
 
 
-struct node* bst_find_node (struct node* head, int value){
+struct bst_node* bst_find_node (struct bst_node* head, int value){
 	if (head == NULL) return NULL;
 	if (head->value == value) return head;
 
@@ -90,9 +90,9 @@ struct node* bst_find_node (struct node* head, int value){
 }
 
 
-void bfs_traverse (
-		struct node* head,
-		void (*do_level_order)(struct node *head)
+void bst_bfs_traverse (
+		struct bst_node* head,
+		void (*do_level_order)(struct bst_node *head)
 		)
 {
 	struct queue * q = queue_create();
@@ -101,7 +101,7 @@ void bfs_traverse (
 
 
 	while (queue_size_get(q) != 0){
-		struct node* popped = (struct node*) queue_pop(q);	
+		struct bst_node* popped = (struct bst_node*) queue_pop(q);	
 		do_level_order(popped);
 
 		if (popped->left != NULL)
@@ -116,40 +116,40 @@ void bfs_traverse (
 
 }
 
-void dfs_traverse (
-		struct node * head,
-		void (*do_pre_order) (struct node *head),
-		void (*do_in_order) (struct node *head),
-		void (*do_post_order) (struct node *head)
+void bst_dfs_traverse (
+		struct bst_node * head,
+		void (*do_pre_order) (struct bst_node *head),
+		void (*do_in_order) (struct bst_node *head),
+		void (*do_post_order) (struct bst_node *head)
 
 		){
 	if (head == NULL) return;
 
 	if (do_pre_order != NULL) do_pre_order(head);
 
-	dfs_traverse(head->left, do_pre_order, do_in_order, do_post_order);
+	bst_dfs_traverse(head->left, do_pre_order, do_in_order, do_post_order);
 
 	if (do_in_order != NULL) do_in_order(head);
 
-	dfs_traverse(head->right, do_pre_order, do_in_order, do_post_order);
+	bst_dfs_traverse(head->right, do_pre_order, do_in_order, do_post_order);
 
 	if (do_post_order != NULL) do_post_order(head);
 
 }
 
 
-void print_node(struct node* head){
+void print_node(struct bst_node* head){
 	if (head != NULL)
 		printf("%d ", head->value);
 }
 
 int main () {
 	int array[20] = {50, 75, 25, 29, 45, 60, 10, 80};
-	struct node *bst = bst_create(array, 8);
-	dfs_traverse(bst, NULL, &print_node, NULL);
+	struct bst_node *bst = bst_create(array, 8);
+	bst_dfs_traverse(bst, NULL, &print_node, NULL);
 
 	printf("\n");
-	bfs_traverse(bst, &print_node);
+	bst_bfs_traverse(bst, &print_node);
 	printf("\n");
 
 
