@@ -7,14 +7,16 @@ struct node {
 	struct node * left;
 	struct node * right;
 	int value;
+	void* data;
 };
 
 
-struct node * create_node (int value) {
+struct node * create_node (int value, void * data) {
 	struct node*  head = malloc(sizeof(struct node));
 	head->value = value;
 	head->left = NULL;
 	head->right = NULL;
+	head->data = data;
 
 	return head;
 }
@@ -60,11 +62,11 @@ struct node* bst_create(int* array, int size)
 {
 	int i = 0;
 	if (size == 0) return NULL;	
-	struct node *head = create_node(array[0]);
+	struct node *head = create_node(array[0], NULL);
 
 
 	for (i = 1; i < size; i++){
-		struct node *next = create_node(array[i]);
+		struct node *next = create_node(array[i], NULL);
 		bst_insert(head, next);
 
 	}
