@@ -20,11 +20,11 @@ struct node * create_node (int value) {
 }
 
 
-void insert_to_right(struct node * head, struct node* next){
+void put_at_right(struct node * head, struct node* next){
 	head->right = next;
 }
 
-void insert_to_left (struct node *head, struct node *next) {
+void put_at_left (struct node *head, struct node *next) {
 	head->left = next;
 }
 
@@ -38,25 +38,25 @@ int has_right_subtree (struct node * head){
 }
 
 
-void insert_binary_node (struct node* head, struct node* next){
+void bst_insert (struct node* head, struct node* next){
 
 
 	if (next->value > head->value){
 		if (has_right_subtree(head))
-			return insert_binary_node(head->right, next); 
-		return insert_to_right(head, next);
+			return bst_insert(head->right, next); 
+		return put_at_right(head, next);
 	}
 	else {
 		if (has_left_subtree(head)) 
-			return insert_binary_node(head->left,  next);
-		return insert_to_left(head, next);
+			return bst_insert(head->left,  next);
+		return put_at_left(head, next);
 
 	}
 
 
 }
 
-struct node* create_bst(int* array, int size)
+struct node* bst_create(int* array, int size)
 {
 	int i = 0;
 	if (size == 0) return NULL;	
@@ -65,7 +65,7 @@ struct node* create_bst(int* array, int size)
 
 	for (i = 1; i < size; i++){
 		struct node *next = create_node(array[i]);
-		insert_binary_node(head, next);
+		bst_insert(head, next);
 
 	}
 
@@ -129,7 +129,7 @@ void print_node(struct node* head){
 
 int main () {
 	int array[20] = {50, 75, 25, 29, 45, 60, 10, 80};
-	struct node *bst = create_bst(array, 8);
+	struct node *bst = bst_create(array, 8);
 	dfs_traverse(bst, NULL, &print_node, NULL);
 
 	printf("\n");
