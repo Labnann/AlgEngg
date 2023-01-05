@@ -129,25 +129,4 @@ void bst_dfs_traverse (
 }
 
 
-void print_node(struct bst_node* head){
-	if (head != NULL)
-		printf("%d ", head->value);
-}
-
-int main () {
-	int array[20] = {50, 75, 25, 29, 45, 60, 10, 80};
-	struct bst_node *bst = bst_create_from_array(array, 8);
-	bst_dfs_traverse(bst, NULL, &print_node, NULL);
-
-	printf("\n");
-	bst_bfs_traverse(bst, &print_node);
-	printf("\n");
-
-
-	printf("%d\n", bst_find_node(bst, 47) == NULL);
-	printf("%d\n", bst_find_node(bst, 45) == NULL);
-	printf("%d\n", bst_find_node(bst, 75) == NULL);
-	printf("%d\n", bst_find_node(bst, 87) == NULL);
-}
-
 
