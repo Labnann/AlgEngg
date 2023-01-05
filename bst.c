@@ -38,17 +38,17 @@ int has_right_subtree (struct node * head){
 }
 
 
-void append_binary_node (struct node* head, struct node* next){
+void insert_binary_node (struct node* head, struct node* next){
 
 
 	if (next->value > head->value){
 		if (has_right_subtree(head))
-			return append_binary_node(head->right, next); 
+			return insert_binary_node(head->right, next); 
 		return insert_to_right(head, next);
 	}
 	else {
 		if (has_left_subtree(head)) 
-			return append_binary_node(head->left,  next);
+			return insert_binary_node(head->left,  next);
 		return insert_to_left(head, next);
 
 	}
@@ -65,7 +65,8 @@ struct node* create_bst(int* array, int size)
 
 	for (i = 1; i < size; i++){
 		struct node *next = create_node(array[i]);
-		append_binary_node(head, next);
+		insert_binary_node(head, next);
+
 	}
 
 	return head;
