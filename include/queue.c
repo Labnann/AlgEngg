@@ -65,7 +65,7 @@ struct queue* queue_create ()
 void queue_push (struct queue* q, void* val) 
 {
 	struct list_head *new_head =  list_create_head(val);
-	if (q->back) 
+	if (q->back && q->front) 
 	        list_insert_prev(q->back, new_head);	
 	else {
 		q->front = new_head;

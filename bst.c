@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "./include/queue.h"
 
 
 struct node {
@@ -38,7 +39,7 @@ int has_right_subtree (struct node * head){
 
 
 void append_binary_node (struct node* head, struct node* next){
-	
+
 
 	if (next->value > head->value){
 		if (has_right_subtree(head))
@@ -52,15 +53,15 @@ void append_binary_node (struct node* head, struct node* next){
 
 	}
 
-		
+
 }
 
 struct node* create_bst(int* array, int size)
 {
 	int i = 0;
- 	if (size == 0) return NULL;	
+	if (size == 0) return NULL;	
 	struct node *head = create_node(array[0]);
-	
+
 
 	for (i = 1; i < size; i++){
 		struct node *next = create_node(array[i]);
@@ -72,12 +73,37 @@ struct node* create_bst(int* array, int size)
 }
 
 
+void bfs_traverse (
+		struct node* head,
+		void (*do_level_order)(struct node *head)
+		)
+{
+	struct queue * q = queue_create();
 
-void dfs_traverse(
+	queue_push (q, (void *) head);
+
+
+	while (queue_size_get(q) != 0){
+		struct node* popped = (struct node*) queue_pop(q);	
+		do_level_order(popped);
+
+		if (popped->left != NULL)
+			queue_push(q,(void *) popped->left);
+
+		if (popped->right != NULL)
+			queue_push(q,(void *) popped->right);
+
+
+	}
+
+
+}
+
+void dfs_traverse (
 		struct node * head,
-	        void (*do_pre_order) (struct node *head),
-	        void (*do_in_order) (struct node *head),
-	        void (*do_post_order) (struct node *head)
+		void (*do_pre_order) (struct node *head),
+		void (*do_in_order) (struct node *head),
+		void (*do_post_order) (struct node *head)
 
 		){
 	if (head == NULL) return;
@@ -96,13 +122,17 @@ void dfs_traverse(
 
 
 void print_node(struct node* head){
-	printf("%d ", head->value);
+	if (head != NULL)
+		printf("%d ", head->value);
 }
 
 int main () {
- int array[20] = {50, 75, 25, 29, 45, 60, 10, 80};
- struct node *bst = create_bst(array, 8);
- dfs_traverse(bst, NULL, &print_node, NULL);
+	int array[20] = {50, 75, 25, 29, 45, 60, 10, 80};
+	struct node *bst = create_bst(array, 8);
+	dfs_traverse(bst, NULL, &print_node, NULL);
+
+	printf("\n");
+	bfs_traverse(bst, &print_node);
 }
 
 
