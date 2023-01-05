@@ -40,17 +40,17 @@ int has_right_subtree (struct node * head){
 }
 
 
-void bst_insert (struct node* head, struct node* next){
+void bst_insert_node (struct node* head, struct node* next){
 
 
 	if (next->value > head->value){
 		if (has_right_subtree(head))
-			return bst_insert(head->right, next); 
+			return bst_insert_node(head->right, next); 
 		return put_at_right(head, next);
 	}
 	else {
 		if (has_left_subtree(head)) 
-			return bst_insert(head->left,  next);
+			return bst_insert_node(head->left,  next);
 		return put_at_left(head, next);
 
 	}
@@ -67,11 +67,25 @@ struct node* bst_create(int* array, int size)
 
 	for (i = 1; i < size; i++){
 		struct node *next = create_node(array[i], NULL);
-		bst_insert(head, next);
+		bst_insert_node(head, next);
 
 	}
 
 	return head;
+
+}
+
+
+
+struct node* bst_find_node (struct node* head, int value){
+	if (head == NULL) return NULL;
+	if (head->value == value) return head;
+
+	if (value > head->value)
+		return bst_find_node (head->right, value);
+
+	return bst_find_node(head->left, value);
+	
 
 }
 
@@ -136,6 +150,13 @@ int main () {
 
 	printf("\n");
 	bfs_traverse(bst, &print_node);
+	printf("\n");
+
+
+	printf("%d\n", bst_find_node(bst, 47) == NULL);
+	printf("%d\n", bst_find_node(bst, 45) == NULL);
+	printf("%d\n", bst_find_node(bst, 75) == NULL);
+	printf("%d\n", bst_find_node(bst, 87) == NULL);
 }
 
 
