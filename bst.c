@@ -41,10 +41,15 @@ void append_binary_node (struct node* head, struct node* next){
 	
 
 	if (next->value > head->value){
-		return append_binary_node(head->right, next); 
+		if (has_right_subtree(head))
+			return append_binary_node(head->right, next); 
+		return insert_to_right(head, next);
 	}
 	else {
-		return append_binary_node(head->left,  next);
+		if (has_left_subtree(head)) 
+			return append_binary_node(head->left,  next);
+		return insert_to_left(head, next);
+
 	}
 
 		
