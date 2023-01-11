@@ -11,18 +11,12 @@ void print_node(struct bst_node * head) {
 				head -> value);
 }
 
-
-void extra_reserve (struct bst_node *bst, int number){
-	int flag = 1;
-	bst_insert_node(bst, bst_create_node(number+3, NULL));
-	bst_insert_node(bst, bst_create_node(number+2, NULL));
-	bst_insert_node(bst, bst_create_node(number+1, NULL));
-	bst_insert_node(bst, bst_create_node(number-1, NULL));
-	bst_insert_node(bst, bst_create_node(number-2, NULL));
-	bst_insert_node(bst, bst_create_node(number-3, NULL));
-
+int abs(int x){
+	return x<0? -x : x;
 }
-
+int is_reservable(struct bst_node * head, struct bst_node* next) {
+	return abs(head->value - next->value) > 3;
+}
 
 int main() {
 	int number;
@@ -31,20 +25,17 @@ int main() {
 	struct bst_node * bst = NULL;
 	scanf("%d", & number);
 	bst = bst_create_node(number, &flag);
-	extra_reserve(bst, number);
 	bst_dfs_traverse(bst, NULL, & print_node, NULL);
+	printf("\n");
+
 	do {
-		printf("\n");
 		scanf("%d", & number);
 		if (number == -1) break;
-		int reserved = is_reserved(bst, number);
-		if (!reserved){
-			extra_reserve(bst, number);
-			bst_insert_node(bst, bst_create_node(number, &flag));
+		int reserved =	bst_conditional_insert(bst, bst_create_node(number, &flag), is_reservable);
 
-		}
 		bst_dfs_traverse(bst, NULL, & print_node, NULL);
-		if (reserved) printf("(Reservation failed)\n");
+		if (!reserved) printf("(Reservation failed)");
+		printf("\n");
 
 
 	} while (1);

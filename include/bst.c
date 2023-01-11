@@ -130,3 +130,28 @@ void bst_dfs_traverse (
 
 
 
+int bst_conditional_insert( 
+		struct bst_node* head, 
+		struct bst_node* next,  
+		int (*is_acceptable)(struct bst_node*, struct bst_node*) 
+		)
+{
+
+	if (!is_acceptable(head, next)) return 0;
+
+	if (next->value > head->value){
+		if (has_right_subtree(head))
+			return bst_conditional_insert(head->right, next, is_acceptable); 
+		 put_at_right(head, next);
+		 return 1;
+	}
+	else {
+		if (has_left_subtree(head)) 
+			return bst_conditional_insert(head->left, next, is_acceptable);
+		put_at_left(head, next);
+		return 1;
+
+	}
+
+
+}
