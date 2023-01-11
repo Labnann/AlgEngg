@@ -45,8 +45,6 @@ int main() {
         struct	bst_node *bst = bst_create_from_array(node_in, size); 	
 
 	scanf("%d", &test_cases);
-	scanned = 10;
-	scanned2 =80;
 
 	while (test_cases--) {
 		 scanf("%d%d", &scanned, &scanned2);
