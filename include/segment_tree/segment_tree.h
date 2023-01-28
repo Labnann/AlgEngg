@@ -17,7 +17,7 @@ struct segment_tree {
         int array_size;
         struct sgt_node* (*building_function) (struct sgt_node*, struct sgt_node*);
         void* (*unify_data) (void*, void*);
-        void* (*data_reader) (struct sgt_node*);
+        void* (*data_reader) (void*);
         struct sgt_node* (*construct_leaf) (void*, int);
 };
 

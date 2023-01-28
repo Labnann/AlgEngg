@@ -60,12 +60,20 @@ void* __sgt_range_read(struct segment_tree* sgt, struct sgt_node* head, int want
 	
 	if (head == NULL) return NULL;
 
+	if (head->lazy_data && (head -> range_start != head-> range_end)){
+		head->left->lazy_data = head->lazy_data;
+		head->right->lazy_data= head->lazy_data;
+		head->lazy_data = NULL;
+	}
+
 	int node_has_everything = 
 		at_left(head, wanted_start-1) &&
 		at_right(head, wanted_end+1);
 
 	if (node_has_everything) {
-		return (sgt->data_reader)(head);
+		void* data = (sgt->data_reader)(head->data);
+		void* lazy_data = (sgt->data_reader)(head->lazy_data); 
+		return sgt->unify_data(data, lazy_data);
 	}
 
 	int node_has_nothing = (at_left (head, wanted_start) && at_left (head, wanted_end))

@@ -10,11 +10,12 @@ struct sgt_node* create_base_leaf(void *data_array, int leaf_position) {
 	return sgt_create_node(data, leaf_position, leaf_position);
 }
 
-void* data_reader (struct sgt_node* node)
+void* data_reader (void* data)
 {
-	int* data = malloc(sizeof (int));
-	*data = *(int*) node->data;
-	return data;
+	if (data == NULL) return NULL;
+	int* read_data = malloc(sizeof (int));
+	*read_data = *(int*) data;
+	return read_data;
 }
 
 void* unify_node_sum (void* left_data, void* right_data)
