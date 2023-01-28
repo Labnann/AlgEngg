@@ -1,11 +1,33 @@
-#include "../../include/segment_tree/segment_tree.h"
 #include <stdlib.h>
+#include <stdio.h>
+
+#include "../../include/segment_tree/segment_tree.h"
 
 struct sgt_node* create_base_leaf(void *data_array, int leaf_position) {
 	int *array = data_array;
 	int *data = malloc(sizeof(int));
 	*data = array[leaf_position];
 	return sgt_create_node(data, leaf_position, leaf_position);
+}
+
+void* data_reader (struct sgt_node* node)
+{
+	int* data = malloc(sizeof (int));
+	*data = *(int*) node->data;
+	return data;
+}
+
+void* unify_node_sum (void* left_data, void* right_data)
+{
+	int left_sum, right_sum;
+
+	left_sum = (left_data ==NULL)?	   0: 	*(int*) left_data;
+	right_sum = (right_data == NULL )? 0:	*(int*) right_data;
+	int *unified_sum = malloc(sizeof (int));
+	*unified_sum = left_sum + right_sum;
+	free(left_data);
+	free(right_data);
+	return unified_sum;
 }
 
 struct sgt_node* sum_node (struct sgt_node* left_head, struct sgt_node* right_head){
@@ -28,12 +50,20 @@ int main(){
 		.array = (void*) a,
 		.array_size = 9,
 		.root = NULL,
-		.merging_function = &sum_node,
-		.construct_leaf = &create_base_leaf 
+		.building_function = &sum_node,
+		.construct_leaf = &create_base_leaf,
+		.unify_data = & unify_node_sum,
+		.data_reader = & data_reader
 
 	}; 
 
 	sgt_create_tree(&sgt);
+
+	printf("%d\n", *(int *) sgt_range_read(&sgt, 0, 2));
+	printf("%d\n", *(int *) sgt_range_read(&sgt, 1, 2));
+        printf("%d\n", *(int *) sgt_range_read(&sgt, 2, 2));
+	printf("%d\n", *(int *) sgt_range_read(&sgt, 3, 2));
+	printf("%d\n", *(int *) sgt_range_read(&sgt, 4, 2));
 
 
 }

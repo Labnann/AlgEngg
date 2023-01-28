@@ -15,12 +15,15 @@ struct segment_tree {
         struct sgt_node* root;
         void* array;
         int array_size;
-        struct sgt_node* (*merging_function) (struct sgt_node*, struct sgt_node*);
+        struct sgt_node* (*building_function) (struct sgt_node*, struct sgt_node*);
+        void* (*unify_data) (void*, void*);
+        void* (*data_reader) (struct sgt_node*);
         struct sgt_node* (*construct_leaf) (void*, int);
 };
 
 
 void sgt_create_tree(struct segment_tree* sgt);
 struct sgt_node* sgt_create_node(void *data, int range_start,int range_end);
+void* sgt_range_read (struct segment_tree* sgt, int range_start, int range_end);
 #endif
 
