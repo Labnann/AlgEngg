@@ -55,15 +55,28 @@ int at_right(struct sgt_node* head, int want_point){
 
 }
 
+void __propagate_lazy_data(struct segment_tree* sgt, struct sgt_node *head) 
+{
+	void *left_tree_lazy = sgt->data_reader(head->left->lazy_data);
+	void *right_tree_lazy = sgt->data_reader(head->right->lazy_data);
+	void* to_left = sgt->data_reader(head->lazy_data);
+	void* to_right = sgt->data_reader(head->lazy_data);
+	free(head->left->lazy_data);
+	free(head->right->lazy_data);
+	free(head->lazy_data);
+	head->left->lazy_data = to_left;
+	head->right->lazy_data = to_right;
+	head->lazy_data = NULL;
+
+	
+}
 
 void* __sgt_range_read(struct segment_tree* sgt, struct sgt_node* head, int wanted_start, int wanted_end){
 	
 	if (head == NULL) return NULL;
 
 	if (head->lazy_data && (head -> range_start != head-> range_end)){
-		head->left->lazy_data = head->lazy_data;
-		head->right->lazy_data= head->lazy_data;
-		head->lazy_data = NULL;
+		__propagate_lazy_data(sgt, head);
 	}
 
 	int node_has_everything = 
