@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "../../include/segment_tree/segment_tree.h"
+#include "../include/segment_tree/segment_tree.h"
 
 struct sgt_node* create_base_leaf(void *data_array, int leaf_position) {
 	int *array = data_array;
