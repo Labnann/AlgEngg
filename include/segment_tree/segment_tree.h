@@ -19,11 +19,14 @@ struct segment_tree {
         void* (*unify_data) (void*, void*);
         void* (*data_reader) (void*);
         struct sgt_node* (*construct_leaf) (void*, int);
+	void (*data_multiplier)(void*, int);
 };
 
 
 void sgt_create_tree(struct segment_tree* sgt);
 struct sgt_node* sgt_create_node(void *data, int range_start,int range_end);
 void* sgt_range_read (struct segment_tree* sgt, int range_start, int range_end);
+
+void* sgt_range_update (struct segment_tree* sgt, void* data, int range_start, int range_end);
 #endif
 

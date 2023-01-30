@@ -55,20 +55,62 @@ int at_right(struct sgt_node* head, int want_point){
 
 }
 
+int __range_size(struct sgt_node* head)
+{
+	return head->range_end - head->range_start +1;
+}
+
 void __propagate_lazy_data(struct segment_tree* sgt, struct sgt_node *head) 
 {
 	void *left_tree_lazy = sgt->data_reader(head->left->lazy_data);
 	void *right_tree_lazy = sgt->data_reader(head->right->lazy_data);
 	void* to_left = sgt->data_reader(head->lazy_data);
 	void* to_right = sgt->data_reader(head->lazy_data);
+
 	free(head->left->lazy_data);
 	free(head->right->lazy_data);
-	free(head->lazy_data);
-	head->left->lazy_data = to_left;
-	head->right->lazy_data = to_right;
+
+	sgt->data_multiplier(head->lazy_data, 
+		__range_size(head));
+
+	head->data = sgt->unify_data(head->lazy_data, head->data);
+	head->left->lazy_data = sgt->unify_data(to_left, left_tree_lazy);
+	head->right->lazy_data = sgt->unify_data(to_right, right_tree_lazy);
 	head->lazy_data = NULL;
 
 	
+}
+
+void __sgt_range_update(struct segment_tree* sgt, struct sgt_node* head, void* data,  int wanted_start, int wanted_end){
+	
+	if (head == NULL) return;
+
+	if (head->lazy_data && (head -> range_start != head-> range_end)){
+		__propagate_lazy_data(sgt, head);
+	}
+
+	int node_has_everything = 
+		at_left(head, wanted_start-1) &&
+		at_right(head, wanted_end+1);
+
+	if (node_has_everything) {
+		void* lazy_data = (sgt->data_reader)(head->lazy_data); 
+		free(head->lazy_data);
+		head->lazy_data = sgt->unify_data(data, lazy_data);
+		return;
+	}
+
+	int node_has_nothing = (at_left (head, wanted_start) && at_left (head, wanted_end))
+			||     (at_right(head, wanted_start) && at_right(head, wanted_end));	
+
+	if (node_has_nothing) return;
+
+	int node_has_something = !node_has_nothing;
+
+	if (node_has_something) {
+		__sgt_range_update(sgt, data, head->left, wanted_start, wanted_end);
+		__sgt_range_update(sgt, data,  head->right, wanted_start, wanted_end);	
+	}
 }
 
 void* __sgt_range_read(struct segment_tree* sgt, struct sgt_node* head, int wanted_start, int wanted_end){
@@ -103,8 +145,11 @@ void* __sgt_range_read(struct segment_tree* sgt, struct sgt_node* head, int want
 	}
 }
 
-void* sgt_range_read(struct segment_tree* sgt, int range_start, int range_end) {
+void* sgt_range_read(struct segment_tree* sgt, int range_start, int range_end)
+{
 	return __sgt_range_read(sgt, sgt->root, range_start, range_end);		
 }
 
-
+void* sgt_range_update(struct segment_tree* sgt, void* data,  int wanted_start, int wanted_end){
+	__sgt_range_update(sgt, sgt->root, data, wanted_start, wanted_end);
+}

@@ -18,6 +18,14 @@ void* data_reader (void* data)
 	return read_data;
 }
 
+
+void multiply_data (void* data, int multiplier)
+{
+	if (data == NULL) return;
+	int *data_pointer = (int*) data;
+	*data_pointer = *data_pointer * multiplier;
+}
+
 void* unify_node_sum (void* left_data, void* right_data)
 {
 	int left_sum, right_sum;
@@ -54,13 +62,18 @@ int main(){
 		.building_function = &sum_node,
 		.construct_leaf = &create_base_leaf,
 		.unify_data = & unify_node_sum,
-		.data_reader = & data_reader
+		.data_reader = & data_reader,
+		.data_multiplier = & multiply_data
 
 	}; 
 
 	sgt_create_tree(&sgt);
+	int *x = malloc(sizeof(int));
+	*x = 50;
 
-	printf("%d\n", *(int *) sgt_range_read(&sgt, 0, 2));
+	sgt_range_update(&sgt, x, 0,9);
+
+	printf("%d\n", *(int *) sgt_range_read(&sgt, 0, 1));
 	printf("%d\n", *(int *) sgt_range_read(&sgt, 1, 2));
         printf("%d\n", *(int *) sgt_range_read(&sgt, 2, 2));
 	printf("%d\n", *(int *) sgt_range_read(&sgt, 3, 2));
