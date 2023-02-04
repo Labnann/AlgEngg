@@ -33,9 +33,14 @@ int min(int x, int y) {
 void* unify_node_min (void* left_data, void* right_data)
 {
 	int left_min, right_min;
+	if (left_data == NULL && right_data == NULL)
+		return NULL;
 
-	left_min= (left_data ==NULL)?	   0: 	*(int*) left_data;
-	right_min = (right_data == NULL )? 0:	*(int*) right_data;
+	if(left_data == NULL) return right_data;
+	if(right_data == NULL) return left_data;
+
+	left_min = *(int*) left_data;
+	right_min =*(int*) right_data;
 	int *unified_min = malloc(sizeof (int));
 	*unified_min = min(left_min, right_min);
 	free(left_data);
